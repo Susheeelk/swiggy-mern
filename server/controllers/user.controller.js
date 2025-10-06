@@ -56,7 +56,7 @@ export const signUp = async (req, res) => {
         })
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: `signup error ${error}` })
+        return res.status(500).json({ success: false, message: `signup error ${error.message}` })
     }
 }
 
