@@ -15,7 +15,7 @@ const app = express()
 const port = process.env.PORT || 5000
 
 app.use(cors({
-    origin: "https://swiggy-mern-frontend.onrender.com",
+    origin: "*",
     credentials: true
 }))
 app.use(express.json())
