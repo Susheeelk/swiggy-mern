@@ -42,12 +42,12 @@ export const signUp = async (req, res) => {
         })
 
         const token = genToken(users._id)
-        // await sendMail(email, otp)
+        await sendMail(email, otp)
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
             secure: true,
-            sameSite: "none"
+            sameSite: "None"
         })
 
         return res.status(201).json({
@@ -100,7 +100,7 @@ export const signIn = async (req, res) => {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
             secure: true,
-            sameSite: "none"
+            sameSite: "None"
         })
 
         return res.status(200).json({
