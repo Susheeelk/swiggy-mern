@@ -42,7 +42,9 @@ export const signUp = async (req, res) => {
         })
 
         const token = genToken(users._id)
-        sendMail(email, otp)
+         setTimeout(()=>{
+             sendMail(email, otp)
+         },100)
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
