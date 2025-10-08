@@ -8,10 +8,13 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
-  }
+  },
+  connectionTimeout:10000,
+  grettingTimeout:10000,
 })
 
 const sendMail = async (to, otp) => {
+  try {
   await transporter.sendMail({
     from: `${process.env.EMAIL_USER}`,
     to,
@@ -38,6 +41,9 @@ const sendMail = async (to, otp) => {
       <small style="color: #777;">This is an automated message. Please do not reply.</small>
     </div>`
   })
+  } catch (err) {
+    console.log("email send error",err.message)
+  }
 }
 
 export default sendMail
