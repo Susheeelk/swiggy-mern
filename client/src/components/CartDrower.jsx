@@ -8,15 +8,20 @@ import { toast } from "react-toastify";
 const CartDrawer = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
     const { cartItems } = useSelector((state) => state.cart);
+    const { userData } = useSelector((state) => state.user);
+
+    // Only show cart items for logged-in user
+    const userCartItems = cartItems.filter((i) => i.userId === userData?._id);
 
     const handleRemove = (id) => {
         const item = cartItems.find(i => i.food._id === id);
-        dispatch(removeFromCart(id));
+        dispatch(removeFromCart({ foodId: id, userId: userData._id }));
         if (item) toast.error(`${item.food.name} removed from cart`);
     };
 
     const handleClear = () => {
-        dispatch(clearCart());
+        if (cartItems.length === 0) return;
+        dispatch(clearCart(userData._id));
         toast.warn("Cart cleared");
     };
 
@@ -42,10 +47,10 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="p-4 space-y-4 overflow-y-auto h-[calc(100%-8rem)]">
-                    {cartItems.length === 0 ? (
+                    {userCartItems.length === 0 ? (
                         <p className="text-red-500">Your cart is empty.</p>
                     ) : (
-                        cartItems.map((item) => (
+                        userCartItems.map((item) => (
                             <div key={item.food._id} className="flex items-center space-x-3">
                                 <img
                                     src={item.food.image}

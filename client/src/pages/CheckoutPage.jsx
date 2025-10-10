@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const CheckoutPage = () => {
     const { cartItems } = useSelector((state) => state.cart);
-    const { user } = useSelector((state) => state);
+    const { userData } = useSelector((state) => state.user);
     const [addresses, setAddresses] = useState([]); // ✅ address state
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [selectedPayment, setSelectedPayment] = useState("COD");
@@ -53,7 +53,7 @@ const CheckoutPage = () => {
             const { data } = await api.post("/orders", payload);
 
             if (selectedPayment === "COD") {
-                dispatch(clearCart());
+                dispatch(clearCart(userData._id));
                 navigate("/order-success");
             } else if (selectedPayment === "Online" && data.redirectUrl) {
                 window.location.href = data.redirectUrl;

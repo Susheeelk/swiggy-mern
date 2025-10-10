@@ -11,35 +11,48 @@ const CartPage = () => {
     const { cartItems } = useSelector((state) => state.cart);
     const { userData } = useSelector((state) => state.user);
 
+    if (!userData) {
+        return (
+            <div className="min-h-screen pt-24 px-4 text-center text-red-500">
+                Please login to see your cart.
+            </div>
+        );
+    }
+
+
+    // Filter cart items for logged-in user only
+    const userCartItems = cartItems.filter((i) => i.userId === userData._id);
+
+
     const handleQuantityChange = (id, type) => {
-        if (type === "inc") dispatch(increaseQty(id));
-        else dispatch(decreaseQty(id));
+        if (type === "inc") dispatch(increaseQty({ id, userId: userData._id }));
+        else dispatch(decreaseQty({ id, userId: userData._id }));
     };
 
     const handleRemove = (id) => {
-        const item = cartItems.find((i) => i.food._id === id);
-        dispatch(removeFromCart(id));
+        const item = userCartItems.find((i) => i.food._id === id);
+        dispatch(removeFromCart({ foodId: id, userId: userData._id }));
         if (item) toast.error(`${item.food.name} removed from cart`);
     };
 
     const handleClear = () => {
-        dispatch(clearCart());
+        dispatch(clearCart(userData._id));
         toast.warn("Cart cleared");
     };
 
-    const total = cartItems.reduce((sum, item) => sum + item.food.price * item.quantity, 0);
+    const total = userCartItems.reduce((sum, item) => sum + item.food.price * item.quantity, 0);
 
     return (
         <div className="min-h-screen pt-24 px-4 sm:px-6 lg:px-16 bg-gray-50">
             <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
 
-            {cartItems.length === 0 ? (
+            {userCartItems.length === 0 ? (
                 <p className="text-red-600">Your cart is empty.</p>
             ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Cart Items */}
                     <div className="lg:col-span-2 space-y-4">
-                        {cartItems.map((item) => (
+                        {userCartItems.map((item) => (
                             <div key={item.food._id} className="flex flex-col sm:flex-row items-center bg-white rounded-lg shadow p-4 gap-4">
                                 <img src={item.food.image} alt={item.food.name} className="w-24 h-24 object-cover rounded" />
                                 <div className="flex-1 text-center sm:text-left">

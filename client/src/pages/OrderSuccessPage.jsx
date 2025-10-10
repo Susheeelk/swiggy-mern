@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api from "../api/axios";
 import { clearCart } from "../feature/cartSlice";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 const OrderSuccessPage = () => {
     const location = useLocation();
     const dispatch = useDispatch();
+    const { userData } = useSelector((state) => state.user);
 
     useEffect(() => {
         const verifyPayment = async () => {
@@ -29,7 +30,7 @@ const OrderSuccessPage = () => {
                 }
             } else {
                 // ✅ COD case: cart clear yahi kar do
-                dispatch(clearCart());
+                dispatch(clearCart(userData._id));
                 toast.success("Order placed successfully with COD.");
             }
         };
