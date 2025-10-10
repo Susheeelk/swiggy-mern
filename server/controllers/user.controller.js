@@ -42,12 +42,18 @@ export const signUp = async (req, res) => {
         })
 
         const token = genToken(users._id)
-        await sendMail(email, otp)
+         setTimeout(()=>{
+             sendMail(email, otp)
+         },100)
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
             secure: true,
+<<<<<<< HEAD
             samesite: "None"
+=======
+            sameSite: "None"
+>>>>>>> 935294a1ffe0e366aa2c9dec9034de342c55cb35
         })
 
         return res.status(201).json({
@@ -56,7 +62,7 @@ export const signUp = async (req, res) => {
         })
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: `signup error ${error}` })
+        return res.status(500).json({ success: false, message: `signup error ${error.message}` })
     }
 }
 
